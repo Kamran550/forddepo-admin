@@ -35,7 +35,7 @@ export default function SellerOrderEdit() {
 
   const { orderShops, data, total, coupons } = useSelector(
     (state) => state.order,
-    shallowEqual
+    shallowEqual,
   );
   const { currencies } = useSelector((state) => state.currency, shallowEqual);
   const { activeMenu } = useSelector((state) => state.menu, shallowEqual);
@@ -105,7 +105,7 @@ export default function SellerOrderEdit() {
             stock: el.stock,
             img: getImageFromStock(el.stock) || el.stock.product.img,
             product: undefined,
-          }))
+          })),
         );
         dispatch(setOrderItems(items));
         form.setFieldsValue({
@@ -113,7 +113,7 @@ export default function SellerOrderEdit() {
           currency_id: order.currency.id,
           address: formatAddress(order.details[0].delivery_address),
           payment_type: formatPayment(
-            order.details[0].transaction?.payment_system
+            order.details[0].transaction?.payment_system,
           ),
           note: order.note,
         });
@@ -165,7 +165,7 @@ export default function SellerOrderEdit() {
     }));
     const deliveryPrice = list.reduce(
       (total, item) => (total += item.delivery_fee),
-      0
+      0,
     );
     const shops = orderShops.map((item) => ({
       ...list.find((el) => el.shop_id === item.id),
@@ -203,8 +203,9 @@ export default function SellerOrderEdit() {
 
   return (
     <>
+      <h1>Salamm</h1>
       <PageHeader
-        title={t('edit.order')}
+        title={t('edit.orderfffffff')}
         extra={
           <Button
             type='primary'

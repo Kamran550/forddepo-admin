@@ -19,7 +19,7 @@ export default function DeliverymanPaymentFromPartners() {
   const { t } = useTranslation();
   const { defaultCurrency } = useSelector(
     (state) => state.currency,
-    shallowEqual
+    shallowEqual,
   );
 
   const columns = [
@@ -29,11 +29,7 @@ export default function DeliverymanPaymentFromPartners() {
       dataIndex: 'order_id',
       key: 'order_id',
       sorter: true,
-      render: (id) => (
-        <span className='text-hover'>
-          #{id}
-        </span>
-      ),
+      render: (id) => <span className='text-hover'>#{id}</span>,
     },
     {
       title: t('order.total_price'),
@@ -56,6 +52,13 @@ export default function DeliverymanPaymentFromPartners() {
       render: (_, row) => numberToPrice(row?.order?.delivery_fee),
     },
     {
+      title: t('admin_delivery_fee'),
+      is_show: true,
+      dataIndex: 'admin_delivery_fee',
+      key: 'admin_delivery_fee',
+      render: (_, row) => numberToPrice(row?.order?.admin_delivery_fee),
+    },
+    {
       title: t('payment.type'),
       is_show: true,
       dataIndex: 'transaction',
@@ -67,11 +70,11 @@ export default function DeliverymanPaymentFromPartners() {
   const { activeMenu } = useSelector((state) => state.menu, shallowEqual);
   const [dateRange, setDateRange] = useState(
     moment().subtract(1, 'month'),
-    moment()
+    moment(),
   );
   const { list, loading, params, meta } = useSelector(
     (state) => state.paymentToPartners,
-    shallowEqual
+    shallowEqual,
   );
   const data = activeMenu.data;
   const paramsData = {
@@ -100,7 +103,7 @@ export default function DeliverymanPaymentFromPartners() {
       setMenuData({
         activeMenu,
         data: { ...data, perPage, page, column, sort },
-      })
+      }),
     );
   }
 
@@ -113,7 +116,7 @@ export default function DeliverymanPaymentFromPartners() {
       setMenuData({
         activeMenu,
         data: { ...data, ...{ [name]: item } },
-      })
+      }),
     );
   };
 

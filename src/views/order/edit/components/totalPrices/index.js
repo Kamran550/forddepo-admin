@@ -10,6 +10,8 @@ const TotalPrices = ({ loading }) => {
     (state) => state.order,
     shallowEqual,
   );
+  console.log({ totalPrices });
+
   const numberToPriceLocal = useCallback(
     (price = 0) =>
       numberToPrice(price, data?.currency?.symbol, data?.currency?.position),
@@ -44,7 +46,14 @@ const TotalPrices = ({ loading }) => {
             </h4>
           </div>
           <div className='flex'>
-            <h4 style={{ fontSize: '16px' }}>{t('service.fee')}</h4>
+            <h4 style={{ fontSize: '16px' }}>{t('admin.delivery.fee')}</h4>
+            <h4 style={{ fontSize: '16px' }}>
+              {numberToPriceLocal(totalPrices?.admin_delivery_fee)}
+            </h4>
+          </div>
+
+          <div className='flex'>
+            <h4 style={{ fontSize: '16px' }}>{t('service.feerrrr')}</h4>
             <h4 style={{ fontSize: '16px' }}>
               {numberToPriceLocal(totalPrices?.service_fee)}
             </h4>
@@ -65,6 +74,7 @@ const TotalPrices = ({ loading }) => {
           <div className='flex'>
             <h3 style={{ fontSize: '18px' }}>{t('total.price')}</h3>
             <h3 style={{ fontSize: '18px' }}>
+              <h3>total pricing</h3>
               {numberToPriceLocal(totalPrices?.total_price)}
             </h3>
           </div>

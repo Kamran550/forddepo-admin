@@ -94,7 +94,7 @@ export default function OrderList() {
       addMenu({
         url: `order/${row.id}`,
         id: 'order_edit',
-        name: t('edit.order'),
+        name: t('edit.order444'),
       }),
     );
     navigate(`/order/${row.id}`);
@@ -593,6 +593,7 @@ export default function OrderList() {
         }}
         disabled={immutable === 'deleted_at'}
       >
+        <h1>DeMO</h1>
         <Space>
           <DeleteOutlined />
           {t('delete.all')}
@@ -617,6 +618,7 @@ export default function OrderList() {
 
   return (
     <>
+    <h1>Privett</h1>
       <Space className='justify-content-end w-100 mb-3'>
         <OrderTypeSwitcher listType='orders' />
         <Button

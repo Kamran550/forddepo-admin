@@ -147,7 +147,7 @@ export default function PaymentToPartnersList() {
           defaultCurrency?.position,
         ),
     },
-        {
+    {
       title: t('admin.delivery.fee'),
       is_show: true,
       dataIndex: 'admin_delivery_fee',
@@ -276,6 +276,8 @@ export default function PaymentToPartnersList() {
       type,
       payment_id: paymentId,
     };
+
+    console.log({ params });
 
     paymentToPartnerService
       .pay(params)
@@ -428,7 +430,9 @@ export default function PaymentToPartnersList() {
             <StatisticNumberWidget
               title={t('delivery.fee')}
               value={numberToPrice(
-                totalDeliveryFee,
+                // totalDeliveryFee,
+                list?.total_delivery_fee,
+
                 defaultCurrency?.symbol,
                 defaultCurrency?.position,
               )}

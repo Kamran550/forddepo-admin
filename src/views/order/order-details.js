@@ -330,7 +330,7 @@ export default function OrderDetails() {
       addMenu({
         url: `order/${id}`,
         id: 'order_edit',
-        name: t('edit.order'),
+        name: t('edit.orderrrrrr'),
       }),
     );
     navigate(`/order/${id}`);
@@ -363,6 +363,7 @@ export default function OrderDetails() {
 
   return (
     <div className='order_details'>
+      <h1>salam</h1>
       <Card
         className='order-details-info'
         title={

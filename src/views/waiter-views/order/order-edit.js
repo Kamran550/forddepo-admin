@@ -204,7 +204,7 @@ export default function WaiterOrderEdit() {
   return (
     <>
       <PageHeader
-        title={t('edit.order')}
+        title={t('edit.ordersssssss')}
         extra={
           <Button
             type='primary'
