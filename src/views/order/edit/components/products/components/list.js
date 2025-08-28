@@ -66,6 +66,7 @@ const ProductList = () => {
   };
   return (
     <>
+    <h1>TEST</h1>
       {loading && (
         <div className='loader'>
           <Spin />

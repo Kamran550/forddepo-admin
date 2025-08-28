@@ -129,6 +129,7 @@ const DeliveryInfo = () => {
 
   return (
     <Card title={t('shipping.info')}>
+      <h1>Card delivery</h1>
       <Row gutter={12}>
         <Col span={24}>
           <Form.Item

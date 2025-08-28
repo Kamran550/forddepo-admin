@@ -86,6 +86,8 @@ const OrderEdit = () => {
   }, [data?.id, debouncedCalculateProductsBody, deliveryAddress?.value]);
 
   const formatBodyForCalculate = () => {
+    console.log('formatBodyForCalculate data:', data);
+
     const body = {
       products: calculateProductsBody
         ?.filter((item) => !item?.bonus)
@@ -94,6 +96,8 @@ const OrderEdit = () => {
           addons: item?.addons?.length ? item?.addons : undefined,
         })),
       currency_id: data?.currency?.id,
+      user: data?.user || undefined, // full user məlumatı
+      transaction: data?.transaction,
       coupon: data?.coupon?.name || undefined,
       shop_id: data?.shop?.id,
       type: deliveryType?.value || data?.delivery_type,
@@ -112,6 +116,8 @@ const OrderEdit = () => {
 
   const productCalculate = async (resetDetails = false) => {
     const body = formatBodyForCalculate(resetDetails);
+    console.log({ body });
+
     setProductCalculateLoading(true);
     await orderService
       .calculate(body)
@@ -216,8 +222,13 @@ const OrderEdit = () => {
   };
 
   const onFinish = (values) => {
+    // console.log('update ederkeki values:', values);
+    console.log('update ederkeki data:', data);
+    console.log('origin_price:', data.origin_price);
+
     const addressValue = values?.address?.value?.split('_');
     const defaultBody = {
+      origin_price: data?.origin_price,
       shop_id: data?.shop?.id,
       coupon: data?.coupon?.name || undefined,
       currency_id: values?.currency?.value,
@@ -250,6 +261,7 @@ const OrderEdit = () => {
     };
     const body =
       deliveryType?.value === 'delivery' ? deliveryBody : pickUpOrDineInBody;
+    console.log({ body });
 
     setLoadingBtn(true);
     orderService
@@ -283,6 +295,7 @@ const OrderEdit = () => {
         layout='vertical'
         onFinish={onFinish}
       >
+        <h1>Edit orderrinng</h1>
         <Row gutter={24}>
           <Col span={16}>
             <Products orderLoading={loading} />
@@ -302,7 +315,7 @@ const OrderEdit = () => {
                       loading={loadingBtn}
                       disabled={productCalculateLoading}
                     >
-                      {t('update')}
+                      {t('updatesss')}
                     </Button>
                   </Col>
                 </Row>

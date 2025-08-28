@@ -53,7 +53,7 @@ const ProductsFilter = () => {
         handleChange={(value) => {
           handleFilter('search', value);
         }}
-        placeholder={t('product.search')}
+        placeholder={t('product.searchhhh')}
         style={{ width: 200 }}
       />
       <InfiniteSelect

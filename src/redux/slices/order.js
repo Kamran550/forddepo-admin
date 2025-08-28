@@ -192,6 +192,8 @@ const orderSlice = createSlice({
     },
     setTotalPrices(state, action) {
       const { payload } = action;
+      console.log({ payload });
+
       state.totalPrices = payload;
     },
   },

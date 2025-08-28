@@ -86,8 +86,11 @@ function GoogleMap(props) {
         defaultZoom={12}
         zoom={10}
         className='clickable'
-        initialCenter={props.location}
-        center={props.location}
+        // initialCenter={props.location}
+        // center={props.location}
+        initialCenter={props.location || { lat: 40.6829, lng: 46.3606 }} // Gəncə
+        center={props.location || { lat: 40.6829, lng: 46.3606 }}
+
         // bounds={bounds}
       >
         <Marker

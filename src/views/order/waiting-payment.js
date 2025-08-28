@@ -98,7 +98,7 @@ export default function WaitingPaymentList() {
       addMenu({
         url: `order/${row.id}`,
         id: 'order_edit',
-        name: t('edit.order'),
+        name: t('edit.orderwwwwww'),
       }),
     );
     navigate(`/order/${row.id}`);

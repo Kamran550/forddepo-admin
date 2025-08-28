@@ -23,6 +23,8 @@ const DeliveryInfo = ({ form }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
+  const user = Form.useWatch('user', form);
+
   const data = useSelector((state) => getCartData(state.cart));
   const { activeMenu } = useSelector((state) => state.menu, shallowEqual);
   const { currentBag } = useSelector((state) => state.cart, shallowEqual);
@@ -108,13 +110,16 @@ const DeliveryInfo = ({ form }) => {
   };
 
   const fetchUserAddresses = (search) => {
+    if (!user) return [];
+
     const params = {
+      user_id: user?.key,
       search: search?.length ? search : undefined,
       perPage: 20,
       page: 1,
     };
 
-    return addressService.getAll(params).then(({ data }) => {
+    return addressService.getByUser(params).then(({ data }) => {
       addressesList.current = data;
       return data?.map((item) => ({
         label: item?.title || item.address?.address,
@@ -184,7 +189,7 @@ const DeliveryInfo = ({ form }) => {
 
   const goToAddUserDeliveryAddress = () => {
     if (!data.userUuid) {
-      toast.warning(t('please.select.client'));
+      toast.warning(t('please.select.clientyyyy'));
       return;
     }
     setDeliveryAddressModal(true);

@@ -1,4 +1,4 @@
-import { Col, DatePicker, Form } from 'antd';
+import { Col, DatePicker, Form, Input, Modal } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { InfiniteSelect } from 'components/infinite-select';
 import userService from 'services/user';
@@ -16,6 +16,7 @@ const Delivery = ({ form }) => {
   });
 
   const deliveryDate = Form.useWatch('deliveryDate', form);
+  const user = Form.useWatch('user', form);
 
   const fetchUsers = async ({ page = 1, search = '' }) => {
     const params = {
@@ -30,13 +31,28 @@ const Delivery = ({ form }) => {
   };
 
   const fetchUserAddresses = async ({ page = 1, search = '' }) => {
+    if (!user) return [];
     const params = {
+      user_id: user?.key,
+
       search: search?.length ? search : undefined,
       perPage: 20,
       page,
     };
 
-    return await addressService.getAll(params).then((res) => {
+    console.log('fetchUser:', params);
+
+    // return await addressService.getAll(params).then((res) => {
+    //   setHasMore((prev) => ({ ...prev, address: !!res?.links?.next }));
+    //   return res?.data?.map((item) => ({
+    //     label: item?.address?.address || item?.title,
+    //     value: `${item?.address?.address || item?.title}_${item?.location?.latitude || item?.location?.[0]}_${item?.location?.longitude || item?.location?.[1]}`,
+    //     key: `${item?.address?.address || item?.title}_${item?.location?.latitude}_${item?.location?.longitude}`,
+    //   }));
+    // });
+    return await addressService.getByUser(params).then((res) => {
+      console.log('itemler');
+      
       setHasMore((prev) => ({ ...prev, address: !!res?.links?.next }));
       return res?.data?.map((item) => ({
         label: item?.address?.address || item?.title,
@@ -76,6 +92,7 @@ const Delivery = ({ form }) => {
           />
         </Form.Item>
       </Col>
+
       <Col span={12}>
         <Form.Item
           name='deliveryDate'
