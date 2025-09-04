@@ -142,6 +142,7 @@ const ShopMain = ({ next, action_type = '', user }) => {
 
   return (
     <>
+    <h1>Shopun adidir haa</h1>
       <Form
         form={form}
         name='basic'

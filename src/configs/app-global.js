@@ -1,8 +1,7 @@
-// project settings, you can change only PROJECT_NAME, BASE_URL and WEBSITE_URL otherwise it can break the app
-export const PROJECT_NAME = 'Getqo.az';
+export const PROJECT_NAME = 'Ford Depo';
 export const BASE_URL =
-  process.env.REACT_APP_BASE_URL || 'https://backend.getqo.az';
-export const WEBSITE_URL = 'https://getqo.az';
+  process.env.REACT_APP_BASE_URL || 'https://backend.forddepo.az';
+export const WEBSITE_URL = 'https://forddepo.az';
 export const api_url = BASE_URL + '/api/v1/';
 export const api_url_admin = BASE_URL + '/api/v1/dashboard/admin/';
 export const api_url_admin_dashboard = BASE_URL + '/api/v1/dashboard/';

@@ -284,8 +284,8 @@ const ShopFormData = ({
               >
                 <Select
                   options={[
-                    { label: t('restaurant'), value: 'restaurant' },
-                    { label: t('shop'), value: 'shop' },
+                    { label: t('Topdan'), value: 'wholesale' },
+                    { label: t('Pərakəndə'), value: 'retail' },
                   ]}
                   placeholder={t('select.type')}
                 />
@@ -574,7 +574,7 @@ const ShopFormData = ({
           </Row>
         </Card>
       </Col>
-      <Col span={24}>
+      {/* <Col span={24}>
         <Card title={t('qr.menu.settings')}>
           <Row gutter={12}>
             <Col span={6}>
@@ -607,7 +607,7 @@ const ShopFormData = ({
             </Col>
           </Row>
         </Card>
-      </Col>
+      </Col> */}
 
       <Col span={24}>
         <Card title={t('address')}>
