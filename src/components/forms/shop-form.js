@@ -284,8 +284,8 @@ const ShopFormData = ({
               >
                 <Select
                   options={[
-                    { label: t('Topdan'), value: 'wholesale' },
-                    { label: t('Pərakəndə'), value: 'retail' },
+                    { label: t('restaurant'), value: 'restaurant' },
+                    { label: t('shop'), value: 'shop' },
                   ]}
                   placeholder={t('select.type')}
                 />
