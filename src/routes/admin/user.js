@@ -15,6 +15,18 @@ const UsersRoutes = [
     component: lazy(() => import('views/user/admin')),
   },
   {
+    path: 'users/retail',
+    component: lazy(() => import('views/user/retail')),
+  },
+  {
+    path: 'users/seller',
+    component: lazy(() => import('views/user/seller')),
+  },
+  {
+    path: 'users/whosale',
+    component: lazy(() => import('views/user/whosale')),
+  },
+  {
     path: 'users/user/:id',
     component: lazy(() => import('views/user/user-detail')),
   },

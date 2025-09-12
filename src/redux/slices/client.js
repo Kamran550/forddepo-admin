@@ -9,7 +9,7 @@ const initialState = {
   params: {
     page: 1,
     perPage: 10,
-    role: 'retail_customer',
+    role: 'user',
   },
   meta: {},
 };

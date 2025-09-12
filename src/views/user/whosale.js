@@ -5,6 +5,7 @@ import {
   EditOutlined,
   ExpandOutlined,
   EyeOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Space, Table, Tabs } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +31,7 @@ import useDemo from '../../helpers/useDemo';
 import hideEmail from '../../components/hideEmail';
 const { TabPane } = Tabs;
 
-const roles = ['admin'];
+const roles = ['wholesale_customer'];
 
 export default function Admin() {
   const { t } = useTranslation();
@@ -47,7 +48,7 @@ export default function Admin() {
   );
   const [uuid, setUuid] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [role, setRole] = useState('admin');
+  const [role, setRole] = useState('wholesale_customer');
   const [restore, setRestore] = useState(null);
   const immutable = activeMenu.data?.role || role;
   const { user } = useSelector((state) => state.auth, shallowEqual);

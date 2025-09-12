@@ -30,7 +30,7 @@ import useDemo from '../../helpers/useDemo';
 import hideEmail from '../../components/hideEmail';
 const { TabPane } = Tabs;
 
-const roles = ['admin'];
+const roles = ['seller'];
 
 export default function Admin() {
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ export default function Admin() {
   );
   const [uuid, setUuid] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [role, setRole] = useState('admin');
+  const [role, setRole] = useState('seller');
   const [restore, setRestore] = useState(null);
   const immutable = activeMenu.data?.role || role;
   const { user } = useSelector((state) => state.auth, shallowEqual);

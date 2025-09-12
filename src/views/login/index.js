@@ -54,9 +54,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
 
-  
   const isDemo = Boolean(Number(settings?.is_demo));
-
 
   const fetchUserSettings = (role) => {
     switch (role) {
