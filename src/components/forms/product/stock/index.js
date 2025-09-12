@@ -136,6 +136,7 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
               price: stockWithoutExtras?.price || 0,
               quantity: stockWithoutExtras?.quantity || 0,
               sku: stockWithoutExtras?.sku,
+              warehouse: stockWithoutExtras?.warehouse, // Warehouse ID əlavə edin
               tax: activeMenu.data?.tax || 0,
               addons: stockWithoutExtras ? selectedAddons : [],
             },
@@ -147,6 +148,7 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
               price: undefined,
               quantity: 0,
               sku: activeMenu?.data?.sku,
+              warehouse: null, // Default warehouse
               tax: activeMenu.data?.tax || 0,
               addons: [],
             },
@@ -180,6 +182,7 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
         price: item?.price,
         quantity: item?.quantity,
         sku: item?.sku,
+        warehouse: item?.warehouse, // Warehouse ID əlavə edin
         ids: isRequest
           ? activeMenu.data?.extras.map((_, idx) => item[`extras[${idx}]`])
           : activeMenu.data?.extras.map(
@@ -197,6 +200,7 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
         {
           price: actualStock?.[0]?.price,
           quantity: actualStock?.[0]?.quantity,
+          warehouse: actualStock?.[0]?.warehouse, // Warehouse ID düzgün göndərin
           addons: actualStock?.[0]?.addons
             ? isRequest
               ? actualStock?.[0]?.addons.map((i) => i)

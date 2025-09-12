@@ -28,6 +28,9 @@ const orderService = {
     request.put(`payments/order/${id}/transactions`, data, { params }),
   updateOrderDetailStatus: (id, data) =>
     request.post(`dashboard/admin/order/details/${id}/status`, data),
+  addPartialPayment: (data) => {
+    return request.post('dashboard/admin/orders/partial-payment', data);
+  },
 };
 
 export default orderService;

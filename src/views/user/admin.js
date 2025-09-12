@@ -31,16 +31,7 @@ import useDemo from '../../helpers/useDemo';
 import hideEmail from '../../components/hideEmail';
 const { TabPane } = Tabs;
 
-const roles = [
-  'admin',
-  'seller',
-  'moderator',
-  'manager',
-  'cook',
-  'deliveryman',
-  'waiter',
-  'deleted_at',
-];
+const roles = ['wholesale_customer'];
 
 export default function Admin() {
   const { t } = useTranslation();
@@ -57,7 +48,7 @@ export default function Admin() {
   );
   const [uuid, setUuid] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [role, setRole] = useState('admin');
+  const [role, setRole] = useState('wholesale_customer');
   const [restore, setRestore] = useState(null);
   const immutable = activeMenu.data?.role || role;
   const { user } = useSelector((state) => state.auth, shallowEqual);
@@ -207,16 +198,16 @@ export default function Admin() {
     },
   ]);
 
-  const goToAdduser = (e) => {
-    dispatch(
-      addMenu({
-        id: 'user-add-role',
-        url: `user/add/${e}`,
-        name: t(`add.${e}`),
-      }),
-    );
-    navigate(`/user/add/${e}`);
-  };
+  // const goToAdduser = (e) => {
+  //   dispatch(
+  //     addMenu({
+  //       id: 'user-add-role',
+  //       url: `user/add/${e}`,
+  //       name: t(`add.${e}`),
+  //     }),
+  //   );
+  //   navigate(`/user/add/${e}`);
+  // };
 
   function onChangePagination(pagination, filter, sorter) {
     const { pageSize: perPage, current: page } = pagination;
@@ -367,7 +358,7 @@ export default function Admin() {
           <TabPane tab={t(item)} key={item} />
         ))}
       </Tabs>
-      {immutable != 'admin' &&
+      {/* {immutable != 'admin' &&
       immutable != 'seller' &&
       immutable != 'deleted_at' ? (
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -380,7 +371,7 @@ export default function Admin() {
             {t(`add.${immutable}`)}
           </Button>
         </div>
-      ) : null}
+      ) : null} */}
       <Table
         scroll={{ x: true }}
         rowSelection={rowSelection}

@@ -4,6 +4,8 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { DebounceSelect } from 'components/search';
 import { deleteStockFromStocks } from 'redux/slices/product';
+import productService from 'services/product';
+import { RefetchSearch } from 'components/refetch-search';
 
 const ProductStockList = ({ fetchAddonOptions, form }) => {
   const dispatch = useDispatch();
@@ -19,6 +21,21 @@ const ProductStockList = ({ fetchAddonOptions, form }) => {
     dispatch(deleteStockFromStocks(deletedStockValue));
     remove(field.name);
   };
+
+  async function fetchWarehouseOptions(search) {
+    const params = {
+      search: search?.length ? search : undefined,
+      perPage: 20,
+      page: 1,
+    };
+    return productService.getWarehouse(params).then((res) =>
+      res.data.map((item) => ({
+        label: item?.name || item?.title || item?.id || t('N/A'),
+        value: item?.id,
+        key: item?.id,
+      })),
+    );
+  }
 
   return (
     <Form.List name='stocks'>
@@ -64,7 +81,21 @@ const ProductStockList = ({ fetchAddonOptions, form }) => {
                     </Form.Item>
                   </Col>
                   <Col>
-                    <Form.Item label={t('sku')} name={[index, 'sku']}>
+                    <Form.Item
+                      label={t('warehouse')}
+                      name={[index, 'warehouse']}
+                      rules={[{ required: true, message: t('required') }]}
+                    >
+                      <RefetchSearch
+                        fetchOptions={fetchWarehouseOptions}
+                        style={{ minWidth: 200 }}
+                        className='w-100'
+                      />
+                    </Form.Item>
+                  </Col>
+
+                  <Col>
+                    <Form.Item label={t('skuuuu')} name={[index, 'sku']}>
                       <Input className='w-100' style={{ minWidth: 200 }} />
                     </Form.Item>
                   </Col>

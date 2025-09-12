@@ -47,25 +47,37 @@ const AppLayout = () => {
       status: 'approved',
     };
     if (!languages.length) {
+      console.log('ilk if');
+      
       fetchLanguages();
     }
     if (user?.role === 'seller' || user?.role === 'moderator') {
+      console.log('seller moderator if');
+
       dispatch(fetchMyShop());
     }
     if (user?.role === 'admin' || user?.role === 'manager') {
+      console.log('admin manager if');
+
       dispatch(fetchAllShops(body));
       dispatch(fetchCurrencies());
     } else {
+      console.log('else');
+
       dispatch(fetchRestCurrencies());
     }
   }, []);
 
   useEffect(() => {
     // for development purpose only
+    console.log('app-layout:', user.role);
+
     const userObj = {
       ...user,
       urls: data[user.role],
     };
+    console.log('app-layout:', userObj);
+
     dispatch(setUserData(userObj));
   }, []);
 

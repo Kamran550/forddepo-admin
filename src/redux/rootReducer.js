@@ -100,6 +100,7 @@ import paymentToPartners from './slices/paymentToPartners';
 import shopReviews from './slices/shop-reviews';
 import deliverymanRequest from './slices/deliveryman-request';
 import kitchen from './slices/kitchen';
+import warehouse from './slices/warehouse';
 
 const rootReducer = {
   bookingList,
@@ -205,6 +206,7 @@ const rootReducer = {
   shopReviews,
   deliverymanRequest,
   kitchen,
+  warehouse,
 };
 
 export default rootReducer;

@@ -21,6 +21,8 @@ export default function UserRoleModal({ data, handleCancel }) {
     { label: t('user'), value: 'user', key: 1 },
     { label: t('manager'), value: 'manager', key: 2 },
     { label: t('moderator'), value: 'moderator', key: 3 },
+    { label: t('retail'), value: 'retail_customer', key: 4 },
+    { label: t('wholesale'), value: 'wholesale_customer', key: 5 },
   ];
   const menegerRoleList = [
     { label: t('user'), value: 'user', key: 4 },
@@ -55,14 +57,14 @@ export default function UserRoleModal({ data, handleCancel }) {
       res.data.map((item) => ({
         label: item.translation !== null ? item.translation.title : 'no name',
         value: item.id,
-      }))
+      })),
     );
   }
 
   return (
     <Modal
       visible={!!data}
-      title={t('change.user.role')}
+      title={t('change.user.rolesss')}
       onCancel={handleCancel}
       footer={[
         <Button type='primary' onClick={() => form.submit()} loading={loading}>
@@ -92,7 +94,7 @@ export default function UserRoleModal({ data, handleCancel }) {
           />
         </Form.Item>
 
-        {role !== 'manager' && role !== 'user' ? (
+        {role !== 'manager' && role !== 'user' && role !== 'retail_customer' && role !== 'wholesale_customer' ? (
           <Form.Item
             label={t('shop')}
             name='shop_id'

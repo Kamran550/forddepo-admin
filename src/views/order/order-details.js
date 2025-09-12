@@ -45,6 +45,7 @@ import hideEmail from 'components/hideEmail';
 import ColumnImage from 'components/column-image';
 import UpdateOrderDetailStatus from './updateOrderDetailStatus';
 import TransactionStatusChangeModal from './transactionStatusModal';
+import PartialPaymentSection from './partial-payment';
 
 export default function OrderDetails() {
   const { activeMenu } = useSelector((state) => state.menu, shallowEqual);
@@ -305,6 +306,18 @@ export default function OrderDetails() {
     },
   ];
 
+  const handleAddPayment = async (paymentData) => {
+    try {
+      // Burada sizin API çağırınızı əlavə edin
+      const response = await orderService.addPartialPayment(paymentData);
+      // Uğurlu olduqda order məlumatlarını yeniləyin
+      fetchOrder();
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const handleCloseModal = () => {
     setOrderDetails(null);
     setOrderDeliveryDetails(null);
@@ -546,6 +559,14 @@ export default function OrderDetails() {
                     dataSource={data?.transactions}
                     pagination={false}
                   />
+                  {data?.is_partial_payment && (
+                    <PartialPaymentSection
+                      orderData={data}
+                      defaultCurrency={defaultCurrency}
+                      onAddPayment={handleAddPayment}
+                      loading={loading}
+                    />
+                  )}
                   <Tag className='map_show mt-3' onClick={handleShowModal}>
                     <MdLocationOn /> {t('show.locations')}
                   </Tag>
@@ -618,14 +639,14 @@ export default function OrderDetails() {
               </div>
             </Card>
           )}
-          <Card title={t('documents')}>
+          {/* <Card title={t('documents')}>
             <Table
               columns={documentColumns}
               dataSource={documents}
               pagination={false}
               loading={loading}
             />
-          </Card>
+          </Card> */}
           <Card className='w-100 order-table'>
             <Table
               ref={productListRef}

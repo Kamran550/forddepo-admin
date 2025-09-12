@@ -33,6 +33,8 @@ const productService = {
       {},
       { params },
     ),
+  getWarehouse: (params) =>
+    request.get('dashboard/admin/warehouse', { params }),
 };
 
 export default productService;

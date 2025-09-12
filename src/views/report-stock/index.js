@@ -11,6 +11,7 @@ import { fetchStockProduct } from '../../redux/slices/report/stock';
 import useDidUpdate from '../../helpers/useDidUpdate';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { fetchWarehouses } from '../../redux/slices/warehouse'; // NEW
 
 const ReportStock = () => {
   const dispatch = useDispatch();
@@ -25,21 +26,35 @@ const ReportStock = () => {
   ];
   const { activeMenu } = useSelector((state) => state.menu, shallowEqual);
 
+  const { warehouses } = useSelector((state) => state.warehouse, shallowEqual);
+
   const { loading, productList: reportProducts } = useSelector(
     (state) => state.stockReport,
-    shallowEqual
+    shallowEqual,
   );
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [downloading, setDownloading] = useState(false);
   const [status, setStatus] = useState(activeMenu?.data?.value || null);
+  const [selectedWarehouse, setSelectedWarehouse] = useState(
+    activeMenu?.data?.warehouse_id || null,
+  ); // NEW
+
+  const warehouseOptions = [
+    { value: null, label: t('all.warehouses') || 'All warehouses' },
+    ...warehouses.map((warehouse) => ({
+      value: warehouse.id,
+      label: warehouse.name,
+    })),
+  ];
+
   const goToProductReport = (row) => {
     dispatch(
       addMenu({
         url: `report/products`,
         id: 'report.products',
         name: t('report.products'),
-      })
+      }),
     );
     navigate(`/report/products?product_id=${row.id}`);
   };
@@ -50,6 +65,8 @@ const ReportStock = () => {
       dataIndex: 'product_translation_title',
       key: 'product_translation_title',
       render: (_, data) => {
+        console.log({ data });
+
         return (
           <a onClick={() => goToProductReport(data)}>
             {data?.translation?.title}
@@ -68,6 +85,13 @@ const ReportStock = () => {
       render: (_, data) => {
         return <>{data?.bar_code || '-'}</>;
       },
+    },
+    {
+      title: 'Warehouse', // 🔥 YENİ
+      dataIndex: 'warehouse',
+      key: 'warehouse',
+      is_show: true,
+      render: (_, data) => <>{data?.stock?.warehouse?.name || '-'}</>,
     },
     {
       title: 'Status',
@@ -90,11 +114,21 @@ const ReportStock = () => {
     page: activeMenu.page,
     perPage: activeMenu.perPage,
     actual: status,
+    warehouse_id: selectedWarehouse,
   };
 
   const fetchProduct = (params) => {
     dispatch(fetchStockProduct(params));
   };
+
+  // NEW: Warehouses yüklə
+  useEffect(() => {
+    dispatch(fetchWarehouses());
+  }, [dispatch]);
+
+  useDidUpdate(() => {
+    fetchProduct(params);
+  }, [status, selectedWarehouse]);
 
   useDidUpdate(() => {
     fetchProduct(params);
@@ -117,12 +151,21 @@ const ReportStock = () => {
 
   const onChangePagination = (pagination) => {
     const { pageSize: perPage, current: page } = pagination;
-    fetchProduct({ page, perPage, actual: status });
+    fetchProduct({
+      page,
+      perPage,
+      actual: status,
+      warehouse_id: selectedWarehouse,
+    });
   };
 
   const excelExport = () => {
     setDownloading(true);
-    ReportService.getStocks({ export: 'excel', actual: status })
+    ReportService.getStocks({
+      export: 'excel',
+      actual: status,
+      warehouse_id: selectedWarehouse, // NEW
+    })
       .then((res) => {
         const body = res.data.link;
         if (body) {
@@ -133,6 +176,7 @@ const ReportStock = () => {
   };
 
   const handleSelector = (e) => setStatus(e);
+  const handleWarehouseSelector = (e) => setSelectedWarehouse(e); // NEW
 
   return (
     <>
@@ -140,6 +184,15 @@ const ReportStock = () => {
         <Col span={24}>
           <Card title={t('stock')}>
             <Space className='d-flex justify-content-end'>
+              <Select
+                style={{ width: '200px' }}
+                placeholder={t('select.warehouse') || 'Select warehouse'}
+                onChange={handleWarehouseSelector}
+                options={warehouseOptions}
+                value={selectedWarehouse}
+                allowClear
+              />
+
               <Select
                 style={{ width: '200px' }}
                 onChange={handleSelector}

@@ -201,6 +201,9 @@ const ProductsIndex = ({ next, action_type = '', isRequest }) => {
   };
 
   function productCreate(values, params) {
+    console.log('product create 11111');
+
+    console.log({ params });
     productService
       .create(params)
       .then(({ data }) => {
@@ -323,6 +326,15 @@ const ProductsIndex = ({ next, action_type = '', isRequest }) => {
                       </Form.Item>
                     ))}
                   </Col>
+                  <Col span={6}>
+                    <Form.Item
+                      label={t('oem_code')}
+                      name='oem_code'
+                      rules={[{ required: true, message: t('required') }]}
+                    >
+                      <Input maxLength={50} className='w-100' />
+                    </Form.Item>
+                  </Col>
                 </Row>
               </Card>
             </Col>
@@ -400,7 +412,7 @@ const ProductsIndex = ({ next, action_type = '', isRequest }) => {
                       <Switch />
                     </Form.Item>
                   </Col>
-                  <Col span={6}>
+                  {/* <Col span={6}>
                     <Form.Item
                       label={t('vegetarian')}
                       name='vegetarian'
@@ -408,8 +420,8 @@ const ProductsIndex = ({ next, action_type = '', isRequest }) => {
                     >
                       <Switch />
                     </Form.Item>
-                  </Col>
-                  <Col span={6}>
+                  </Col> */}
+                  {/* <Col span={6}>
                     <Form.Item
                       label={t(`nutrition.${nutrition ? 'on' : 'off'}`)}
                       valuePropName='checked'
@@ -419,7 +431,7 @@ const ProductsIndex = ({ next, action_type = '', isRequest }) => {
                         onChange={(e) => setNutrition(e)}
                       />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                 </Row>
               </Card>
             </Col>
@@ -477,7 +489,7 @@ const ProductsIndex = ({ next, action_type = '', isRequest }) => {
                   {!isRequest && (
                     <Col span={24}>
                       <Form.Item
-                        label={t('shop/restaurant')}
+                        label={t('shop')}
                         name='shop'
                         rules={[{ required: true, message: t('required') }]}
                       >
@@ -520,7 +532,7 @@ const ProductsIndex = ({ next, action_type = '', isRequest }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={24}>
+                  {/* <Col span={24}>
                     <Form.Item label={t('kitchen')} name='kitchen'>
                       <InfiniteSelect
                         allowClear={false}
@@ -529,7 +541,7 @@ const ProductsIndex = ({ next, action_type = '', isRequest }) => {
                         disabled={!shop?.value}
                       />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                   <Col span={24}>
                     <Form.Item label={t('brand')} name='brand'>
                       <DebounceSelect fetchOptions={fetchUserBrandList} />

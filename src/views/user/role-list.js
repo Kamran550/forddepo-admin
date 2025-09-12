@@ -35,6 +35,7 @@ export default function RoleList() {
 
   return (
     <Card title={t('roles')}>
+      <h1>Rollar</h1>
       <Table
         scroll={{ x: true }}
         columns={columns}

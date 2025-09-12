@@ -9,7 +9,7 @@ const initialState = {
   params: {
     page: 1,
     perPage: 10,
-    role: 'user',
+    role: 'retail_customer',
   },
   meta: {},
 };
@@ -17,10 +17,13 @@ const initialState = {
 export const fetchClients = createAsyncThunk(
   'user/fetchClients',
   (params = {}) => {
+    console.log({ params });
+    console.log('state:', initialState.params);
+
     return userService
       .getAll({ ...initialState.params, ...params })
       .then((res) => res);
-  }
+  },
 );
 
 export const fetchSellerClients = createAsyncThunk(
@@ -29,7 +32,7 @@ export const fetchSellerClients = createAsyncThunk(
     return sellerUserService
       .getAll({ ...initialState.params, ...params })
       .then((res) => res);
-  }
+  },
 );
 
 const clientSlice = createSlice({
