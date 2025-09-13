@@ -26,8 +26,7 @@ export default function Users() {
     { id: 1, name: 'retail.user', url: 'users/retail', icon: 'user' },
     { id: 2, name: 'customer.user', url: 'users/whosale', icon: 'user' },
     { id: 3, name: 'role', url: 'users/role', icon: 'user' },
-    { id: 4, name: 'clients', icon: 'user', url: 'users/user' },
-    { id: 5, name: 'seller', icon: 'user', url: 'users/seller' },
+    { id: 4, name: 'seller', icon: 'user', url: 'users/seller' },
   ];
 
   console.log({ list });

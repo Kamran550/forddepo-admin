@@ -64,7 +64,7 @@ export default function UserRoleModal({ data, handleCancel }) {
   return (
     <Modal
       visible={!!data}
-      title={t('change.user.rolesss')}
+      title={t('change.user.role')}
       onCancel={handleCancel}
       footer={[
         <Button type='primary' onClick={() => form.submit()} loading={loading}>

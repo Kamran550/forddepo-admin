@@ -1,38 +1,38 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {
-  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   ExpandOutlined,
   EyeOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Space, Table, Tabs } from 'antd';
+import { Button, Card, Space, Table, Tabs, Tooltip } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { FaTrashRestoreAlt, FaUserCog } from 'react-icons/fa';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { fetchUsers } from '../../redux/slices/user';
-import formatSortType from '../../helpers/formatSortType';
 import { addMenu, disableRefetch, setMenuData } from '../../redux/slices/menu';
+import { useTranslation } from 'react-i18next';
+import formatSortType from '../../helpers/formatSortType';
 import useDidUpdate from '../../helpers/useDidUpdate';
 import UserShowModal from './userShowModal';
-import { useTranslation } from 'react-i18next';
 import UserRoleModal from './userRoleModal';
+import { fetchClients } from '../../redux/slices/client';
 import SearchInput from '../../components/search-input';
 import FilterColumns from '../../components/filter-column';
 import DeleteButton from '../../components/delete-button';
-import { Context } from '../../context/context';
 import { toast } from 'react-toastify';
-import deliveryService from '../../services/delivery';
+import { Context } from '../../context/context';
 import CustomModal from '../../components/modal';
+import deliveryService from '../../services/delivery';
 import ResultModal from '../../components/result-modal';
-import { FaTrashRestoreAlt } from 'react-icons/fa';
 import userService from '../../services/user';
 import useDemo from '../../helpers/useDemo';
 import hideEmail from '../../components/hideEmail';
+
 const { TabPane } = Tabs;
+const roles = ['published', 'deleted_at'];
 
-const roles = ['retail_customer'];
-
-export default function Admin() {
+const User = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,39 +41,26 @@ export default function Admin() {
   const { setIsModalVisible } = useContext(Context);
   const [loadingBtn, setLoadingBtn] = useState(false);
   const { activeMenu } = useSelector((state) => state.menu, shallowEqual);
-  const { users, loading, meta, params } = useSelector(
-    (state) => state.user,
+  const { clients, loading, meta, params } = useSelector(
+    (state) => state.client,
     shallowEqual,
   );
+  const { isDemo } = useDemo();
+
   const [uuid, setUuid] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [role, setRole] = useState('retail_customer');
   const [restore, setRestore] = useState(null);
+  const [role, setRole] = useState('published');
   const immutable = activeMenu.data?.role || role;
-  const { user } = useSelector((state) => state.auth, shallowEqual);
-
-  const {
-    isDemo,
-    demoDeliveryman,
-    demoSeller,
-    demoAdmin,
-    demoModerator,
-    demoMeneger,
-  } = useDemo();
-
   const data = activeMenu.data;
-  const roleData =
-    immutable === 'deleted_at'
-      ? { deleted_at: 1, role: null }
-      : { role: immutable };
-
   const paramsData = {
     sort: data?.sort,
     column: data?.column,
-    ...roleData,
     perPage: data?.perPage,
     page: data?.page,
     search: data?.search,
+    status: immutable === 'deleted_at' ? null : immutable || 'published',
+    deleted_at: immutable === 'deleted_at' ? immutable : null,
   };
 
   const goToEdit = (row) => {
@@ -84,24 +71,13 @@ export default function Admin() {
         name: 'User edit',
       }),
     );
-    navigate(`/user/${row.uuid}`);
-  };
-
-  const goToClone = (row) => {
-    dispatch(
-      addMenu({
-        url: `user-clone/${row.uuid}`,
-        id: 'user-clone',
-        name: 'user.clone',
-      }),
-    );
-    navigate(`/user-clone/${row.uuid}`);
+    navigate(`/user/${row.uuid}`, { state: 'user' });
   };
 
   const goToDetail = (row) => {
     dispatch(
       addMenu({
-        url: `/users/user/${row.uuid}`,
+        url: `users/user/${row.uuid}`,
         id: 'user_info',
         name: t('user.info'),
       }),
@@ -113,100 +89,80 @@ export default function Admin() {
     {
       title: t('id'),
       dataIndex: 'id',
+      key: 'id',
       sorter: true,
       is_show: true,
     },
     {
       title: t('firstname'),
       dataIndex: 'firstname',
+      key: 'firstname',
       is_show: true,
     },
     {
       title: t('lastname'),
       dataIndex: 'lastname',
+      key: 'lastname',
       is_show: true,
     },
     {
       title: t('email'),
       dataIndex: 'email',
+      key: 'email',
       is_show: true,
       render: (email) => <div>{isDemo ? hideEmail(email) : email}</div>,
     },
     {
       title: t('role'),
       dataIndex: 'role',
+      key: 'role',
       is_show: true,
     },
     {
       title: t('options'),
       dataIndex: 'options',
+      key: 'options',
       is_show: true,
       render: (_, row) => {
         return (
           <Space>
             <Button
+              disabled={row.deleted_at}
+              icon={<EyeOutlined />}
+              onClick={() => goToDetail(row)}
+            />
+            <Button
               icon={<ExpandOutlined />}
               onClick={() => setUuid(row.uuid)}
-              disabled={row?.deleted_at}
+              disabled={row.deleted_at}
             />
-            {user.role === 'manager' && row.role === 'admin' ? undefined : (
-              <>
-                <Button
-                  icon={<EyeOutlined />}
-                  onClick={() => goToDetail(row)}
-                  disabled={row?.deleted_at}
-                />
-                <Button
-                  type='primary'
-                  icon={<EditOutlined />}
-                  onClick={() => goToEdit(row)}
-                  disabled={
-                    /*eslint-disable eqeqeq*/
-                    (isDemo && row?.id == demoDeliveryman) ||
-                    (isDemo && row?.id == demoModerator) ||
-                    (isDemo && row?.id == demoMeneger) ||
-                    (isDemo && row?.id == demoSeller) ||
-                    (isDemo && row?.id == demoAdmin) ||
-                    row?.deleted_at
-                  }
-                />
-              </>
-            )}
-
-            {row?.role !== 'admin' && (
-              <Space>
-                <Button
-                  icon={<CopyOutlined />}
-                  onClick={() => goToClone(row)}
-                  disabled={row?.deleted_at}
-                />
-                <DeleteButton
-                  icon={<DeleteOutlined />}
-                  onClick={() => {
-                    setId([row.id]);
-                    setIsModalVisible(true);
-                    setText(true);
-                  }}
-                  disabled={row?.deleted_at}
-                />
-              </Space>
-            )}
+            <Button
+              type='primary'
+              icon={<EditOutlined />}
+              onClick={() => goToEdit(row)}
+              disabled={row.deleted_at}
+            />
+            <Tooltip title={t('change.user.role')}>
+              <Button
+                disabled={row.deleted_at}
+                onClick={() => setUserRole(row)}
+                icon={<FaUserCog />}
+              />
+            </Tooltip>
+            <DeleteButton
+              disabled={row.deleted_at}
+              icon={<DeleteOutlined />}
+              onClick={() => {
+                setId([row.id]);
+                setIsModalVisible(true);
+                setText(true);
+              }}
+            />
           </Space>
         );
       },
     },
   ]);
-
-  // const goToAdduser = (e) => {
-  //   dispatch(
-  //     addMenu({
-  //       id: 'user-add-role',
-  //       url: `user/add/${e}`,
-  //       name: t(`add.${e}`),
-  //     }),
-  //   );
-  //   navigate(`/user/add/${e}`);
-  // };
 
   function onChangePagination(pagination, filter, sorter) {
     const { pageSize: perPage, current: page } = pagination;
@@ -235,7 +191,7 @@ export default function Admin() {
       .delete(params)
       .then(() => {
         toast.success(t('successfully.deleted'));
-        dispatch(fetchUsers(paramsData));
+        dispatch(fetchClients(paramsData));
         setIsModalVisible(false);
         setText([]);
       })
@@ -245,25 +201,25 @@ export default function Admin() {
       });
   };
 
-  const userDropAll = () => {
+  const clientDropAll = () => {
     setLoadingBtn(true);
     userService
       .dropAll()
       .then(() => {
         toast.success(t('successfully.deleted'));
-        dispatch(fetchUsers());
+        dispatch(fetchClients());
         setRestore(null);
       })
       .finally(() => setLoadingBtn(false));
   };
 
-  const userRestoreAll = () => {
+  const clientRestoreAll = () => {
     setLoadingBtn(true);
     userService
       .restoreAll()
       .then(() => {
         toast.success(t('successfully.restored'));
-        dispatch(fetchUsers(paramsData));
+        dispatch(fetchClients(paramsData));
         setRestore(null);
       })
       .finally(() => setLoadingBtn(false));
@@ -271,15 +227,26 @@ export default function Admin() {
 
   useEffect(() => {
     if (activeMenu.refetch) {
-      dispatch(fetchUsers(paramsData));
+      dispatch(fetchClients(paramsData));
       dispatch(disableRefetch(activeMenu));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeMenu.refetch]);
 
   useDidUpdate(() => {
-    dispatch(fetchUsers(paramsData));
+    dispatch(fetchClients(paramsData));
   }, [activeMenu.data]);
+
+  const goToAddClient = () => {
+    dispatch(
+      addMenu({
+        id: 'user-add',
+        url: 'user/add',
+        name: t('add.client'),
+      }),
+    );
+    navigate('/user/add');
+  };
 
   const handleFilter = (items) => {
     const data = activeMenu.data;
@@ -309,11 +276,18 @@ export default function Admin() {
 
   return (
     <Card
-      title={t('users')}
+      title={t('clients')}
       extra={
         <Space wrap>
           {activeMenu.data?.role !== 'deleted_at' ? (
             <Space>
+              <Button
+                type='primary'
+                icon={<PlusCircleOutlined />}
+                onClick={goToAddClient}
+              >
+                {t('add.client')}
+              </Button>
               <DeleteButton size='' onClick={allDelete}>
                 {t('delete.selected')}
               </DeleteButton>
@@ -333,18 +307,18 @@ export default function Admin() {
         </Space>
       }
     >
-      <div className='d-flex justify-content-between mb-3'>
+      <div className='d-flex justify-content-between'>
         <SearchInput
           placeholder={t('search')}
           className='w-25'
-          handleChange={(e) => {
-            handleFilter({ search: e });
-          }}
+          handleChange={(e) => handleFilter({ search: e })}
           defaultValue={activeMenu.data?.search}
           resetSearch={!activeMenu.data?.search}
         />
       </div>
+
       <Tabs
+        className='mt-3'
         scroll={{ x: true }}
         activeKey={immutable}
         onChange={(key) => {
@@ -357,25 +331,12 @@ export default function Admin() {
           <TabPane tab={t(item)} key={item} />
         ))}
       </Tabs>
-      {/* {immutable != 'admin' &&
-      immutable != 'seller' &&
-      immutable != 'deleted_at' ? (
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            type='primary'
-            icon={<PlusCircleOutlined />}
-            onClick={() => goToAdduser(immutable)}
-            className='mr-2'
-          >
-            {t(`add.${immutable}`)}
-          </Button>
-        </div>
-      ) : null} */}
+
       <Table
         scroll={{ x: true }}
         rowSelection={rowSelection}
         columns={columns?.filter((item) => item.is_show)}
-        dataSource={users}
+        dataSource={clients}
         loading={loading}
         pagination={{
           pageSize: params.perPage,
@@ -387,7 +348,6 @@ export default function Admin() {
         rowKey={(record) => record.id}
         onChange={onChangePagination}
       />
-
       <CustomModal
         click={userDelete}
         text={text ? t('delete') : t('all.delete')}
@@ -398,11 +358,12 @@ export default function Admin() {
       {userRole && (
         <UserRoleModal data={userRole} handleCancel={() => setUserRole(null)} />
       )}
+
       {restore && (
         <ResultModal
           open={restore}
           handleCancel={() => setRestore(null)}
-          click={restore.restore ? userRestoreAll : userDropAll}
+          click={restore.restore ? clientRestoreAll : clientDropAll}
           text={restore.restore ? t('restore.modal.text') : t('read.carefully')}
           subTitle={restore.restore ? '' : t('confirm.deletion')}
           loading={loadingBtn}
@@ -411,4 +372,6 @@ export default function Admin() {
       )}
     </Card>
   );
-}
+};
+
+export default User;
