@@ -177,6 +177,9 @@ const ProductRequestDetail = () => {
               <Descriptions.Item label={t('quantity')} span={2}>
                 {item.quantity}
               </Descriptions.Item>
+              <Descriptions.Item label={t('max.quantity')} span={2}>
+                {item.maxQuantity || item.max_qty || 'N/A'}
+              </Descriptions.Item>
               {item?.ids?.map((extra, idx) => (
                 <Descriptions.Item
                   key={'extra' + idx}

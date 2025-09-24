@@ -50,7 +50,16 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
     setLoading(true);
     localProductService(userRole)
       .getById(uuid)
-      .then((res) => {
+      .then(async (res) => {
+        // Fetch warehouse data to get names
+        const warehouseResponse = await productService.getWarehouse({
+          perPage: 100,
+        });
+        const warehouses = warehouseResponse.data.reduce((acc, warehouse) => {
+          acc[warehouse.id] = warehouse;
+          return acc;
+        }, {});
+
         const additionalStocks = cartesian(
           activeMenu?.data.extras?.map((extra) => extra.values || []),
         );
@@ -81,9 +90,20 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
               return {
                 price: selectedStock?.price || 0,
                 quantity: selectedStock?.quantity || 0,
+                maxQuantity: selectedStock?.maxQuantity || 0,
                 sku: selectedStock?.sku,
                 stock_id: selectedStock?.id,
                 tax: activeMenu?.data.tax || 0,
+                warehouse: selectedStock?.warehouse
+                  ? {
+                      label:
+                        warehouses[selectedStock?.warehouse]?.name ||
+                        warehouses[selectedStock?.warehouse]?.title ||
+                        selectedStock?.warehouse ||
+                        'N/A',
+                      value: selectedStock?.warehouse,
+                    }
+                  : null,
                 extras: additionalStock,
                 addons: selectedAddons,
                 fieldKey: i,
@@ -102,6 +122,7 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
             return {
               price: 0,
               quantity: 0,
+              maxQuantity: 0,
               sku: activeMenu?.data?.sku,
               tax: activeMenu.data?.tax || 0,
               extras: additionalStock,
@@ -135,8 +156,18 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
             {
               price: stockWithoutExtras?.price || 0,
               quantity: stockWithoutExtras?.quantity || 0,
+              maxQuantity: stockWithoutExtras?.maxQuantity || 0,
               sku: stockWithoutExtras?.sku,
-              warehouse: stockWithoutExtras?.warehouse, // Warehouse ID əlavə edin
+              warehouse: stockWithoutExtras?.warehouse
+                ? {
+                    label:
+                      warehouses[stockWithoutExtras?.warehouse]?.name ||
+                      warehouses[stockWithoutExtras?.warehouse]?.title ||
+                      stockWithoutExtras?.warehouse ||
+                      'N/A',
+                    value: stockWithoutExtras?.warehouse,
+                  }
+                : null,
               tax: activeMenu.data?.tax || 0,
               addons: stockWithoutExtras ? selectedAddons : [],
             },
@@ -147,6 +178,7 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
             {
               price: undefined,
               quantity: 0,
+              maxQuantity: 0,
               sku: activeMenu?.data?.sku,
               warehouse: null, // Default warehouse
               tax: activeMenu.data?.tax || 0,
@@ -200,7 +232,9 @@ const StockForm = ({ next, prev, isRequest, userRole = 'admin' }) => {
         {
           price: actualStock?.[0]?.price,
           quantity: actualStock?.[0]?.quantity,
-          warehouse: actualStock?.[0]?.warehouse, // Warehouse ID düzgün göndərin
+          maxQuantity: actualStock?.[0]?.maxQuantity,
+          warehouse:
+            actualStock?.[0]?.warehouse?.value || actualStock?.[0]?.warehouse, // Warehouse ID düzgün göndərin
           addons: actualStock?.[0]?.addons
             ? isRequest
               ? actualStock?.[0]?.addons.map((i) => i)

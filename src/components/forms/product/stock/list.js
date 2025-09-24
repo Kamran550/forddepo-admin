@@ -95,7 +95,7 @@ const ProductStockList = ({ fetchAddonOptions, form }) => {
                   </Col>
 
                   <Col>
-                    <Form.Item label={t('skuuuu')} name={[index, 'sku']}>
+                    <Form.Item label={t('sku')} name={[index, 'sku']}>
                       <Input className='w-100' style={{ minWidth: 200 }} />
                     </Form.Item>
                   </Col>
@@ -104,6 +104,19 @@ const ProductStockList = ({ fetchAddonOptions, form }) => {
                     <Form.Item
                       label={t('quantity')}
                       name={[index, 'quantity']}
+                      rules={[{ required: true, message: t('required') }]}
+                    >
+                      <InputNumber
+                        min={0}
+                        className='w-100'
+                        style={{ minWidth: 200 }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col>
+                    <Form.Item
+                      label={t('max.quantity')}
+                      name={[index, 'maxQuantity']}
                       rules={[{ required: true, message: t('required') }]}
                     >
                       <InputNumber

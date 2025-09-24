@@ -123,6 +123,16 @@ const ProductsEdit = () => {
             ),
             quantity: stock?.quantity || 0,
             price: stock?.price || 0,
+            warehouse: stock?.warehouse
+              ? {
+                  label:
+                    stock?.warehouse?.name ||
+                    stock?.warehouse?.title ||
+                    stock?.warehouse?.id ||
+                    'N/A',
+                  value: stock?.warehouse?.id || stock?.warehouse,
+                }
+              : null,
             extras: undefined,
           })),
           properties: res?.data?.properties,
