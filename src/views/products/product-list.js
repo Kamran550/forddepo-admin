@@ -72,7 +72,7 @@ const ProductCategories = () => {
       is_show: true,
     },
     {
-      title: t('translations'),
+      title: t('translationvvs'),
       dataIndex: 'locales',
       is_show: true,
       render: (_, row) => {
@@ -103,12 +103,25 @@ const ProductCategories = () => {
         category?.translation?.title || category?.id || t('N/A'),
     },
     {
-      title: t('kitchen'),
-      dataIndex: 'kitchen',
-      key: 'kitchen',
+      title: t('stock'),
+      dataIndex: 'stock',
+      key: 'stock',
       is_show: true,
-      render: (kitchen) =>
-        kitchen?.translation?.title || kitchen?.id || t('N/A'),
+      sorter: (a, b) => {
+        // Client-side sorting for stock data
+        const aStock =
+          a.stocks?.reduce((sum, stock) => sum + (stock.quantity || 0), 0) || 0;
+        const bStock =
+          b.stocks?.reduce((sum, stock) => sum + (stock.quantity || 0), 0) || 0;
+        return aStock - bStock;
+      },
+      render: (_, row) => {
+        // Calculate total stock from stocks array
+        const totalStock =
+          row.stocks?.reduce((sum, stock) => sum + (stock.quantity || 0), 0) ||
+          0;
+        return totalStock;
+      },
     },
     {
       title: t('active'),
@@ -196,6 +209,7 @@ const ProductCategories = () => {
     column: data?.column,
     perPage: data?.perPage,
     page: data?.page,
+    with: 'stocks', // Include stocks data in the response
   };
 
   useEffect(() => {
@@ -382,6 +396,12 @@ const ProductCategories = () => {
   const onChangePagination = (pagination, filter, sorter) => {
     const { pageSize: perPage, current: page } = pagination;
     const { field: column, order } = sorter;
+
+    // Skip server-side sorting for stock column (client-side only)
+    if (column === 'stock') {
+      return;
+    }
+
     const sort = formatSortType(order);
     const params = {
       ...paramsData,

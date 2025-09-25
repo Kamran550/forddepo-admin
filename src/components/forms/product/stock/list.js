@@ -104,7 +104,26 @@ const ProductStockList = ({ fetchAddonOptions, form }) => {
                     <Form.Item
                       label={t('quantity')}
                       name={[index, 'quantity']}
-                      rules={[{ required: true, message: t('required') }]}
+                      rules={[
+                        { required: true, message: t('required') },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            const maxQuantity = getFieldValue([
+                              'stocks',
+                              index,
+                              'maxQuantity',
+                            ]);
+                            if (value && maxQuantity && value > maxQuantity) {
+                              return Promise.reject(
+                                new Error(
+                                  'Məhsul miqdarı maksimum miqdardan çox ola bilməz',
+                                ),
+                              );
+                            }
+                            return Promise.resolve();
+                          },
+                        }),
+                      ]}
                     >
                       <InputNumber
                         min={0}
@@ -117,7 +136,26 @@ const ProductStockList = ({ fetchAddonOptions, form }) => {
                     <Form.Item
                       label={t('max.quantity')}
                       name={[index, 'maxQuantity']}
-                      rules={[{ required: true, message: t('required') }]}
+                      rules={[
+                        { required: true, message: t('required') },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            const quantity = getFieldValue([
+                              'stocks',
+                              index,
+                              'quantity',
+                            ]);
+                            if (value && quantity && value < quantity) {
+                              return Promise.reject(
+                                new Error(
+                                  'Maksimum miqdar məhsul miqdarından az ola bilməz',
+                                ),
+                              );
+                            }
+                            return Promise.resolve();
+                          },
+                        }),
+                      ]}
                     >
                       <InputNumber
                         min={0}
