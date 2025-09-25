@@ -376,7 +376,7 @@ export default function OrderDetails() {
 
   return (
     <div className='order_details'>
-      <h1>salam</h1>
+
       <Card
         className='order-details-info'
         title={

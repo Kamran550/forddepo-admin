@@ -38,7 +38,6 @@ const OrderShopProducts = ({ orderLoading }) => {
 
   return (
     <Card className='order-add'>
-      <h1>Salamlarr</h1>
       {orderLoading && (
         <div className='loader'>
           <Spin />

@@ -131,7 +131,6 @@ export default function OrderItems() {
         </div>
       )}
       <Row gutter={24} className='mt-4'>
-        <h1>Salam</h1>
         <Col span={24}>
           {orderShops.map((shop) => (
             <Card key={shop.uuid} className='shop-card'>

@@ -203,7 +203,6 @@ export default function SellerOrderEdit() {
 
   return (
     <>
-      <h1>Salamm</h1>
       <PageHeader
         title={t('edit.orderfffffff')}
         extra={

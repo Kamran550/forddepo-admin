@@ -214,7 +214,7 @@ const UserDetail = () => {
   return (
     <>
       <PageHeader
-        title={t('user.info')}
+        title={t('user.infosss')}
         extra={
           <Button
             type='primary'
@@ -370,12 +370,36 @@ const UserDetail = () => {
                     ),
                 },
                 {
-                  title: t('delivery.date.&.time'),
-                  dataIndex: 'delivery_date',
-                  key: 'delivery_date',
-                  render: (_, row) =>
-                    `${row.delivery_date} ${row?.delivery_time || ''}`,
+                  title: t('debt'),
+                  dataIndex: 'debt',
+                  key: 'debt',
+                  render: (_, row) => {
+                    const debt = row.is_partial_payment
+                      ? (row.total_price || 0) - (row.paid_amount || 0)
+                      : 0;
+                    return (
+                      <span
+                        style={{
+                          color: debt > 0 ? '#ff4d4f' : '#52c41a',
+                          fontWeight: debt > 0 ? 'bold' : 'normal',
+                        }}
+                      >
+                        {numberToPrice(
+                          debt,
+                          defaultCurrency?.symbol,
+                          defaultCurrency?.position,
+                        )}
+                      </span>
+                    );
+                  },
                 },
+                // {
+                //   title: t('delivery.date.&.time'),
+                //   dataIndex: 'delivery_date',
+                //   key: 'delivery_date',
+                //   render: (_, row) =>
+                //     `${row.delivery_date} ${row?.delivery_time || ''}`,
+                // },
                 {
                   title: t('status'),
                   dataIndex: 'status',

@@ -618,7 +618,6 @@ export default function OrderList() {
 
   return (
     <>
-    <h1>Privett</h1>
       <Space className='justify-content-end w-100 mb-3'>
         <OrderTypeSwitcher listType='orders' />
         <Button
