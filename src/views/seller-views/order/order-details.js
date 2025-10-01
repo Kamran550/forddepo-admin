@@ -44,6 +44,7 @@ import OrderDeliveryman from './orderDeliveryman';
 import ShowLocationsMap from './show-locations.map';
 import UpdateOrderDetailStatus from './updateOrderDetailStatus';
 import TransactionStatusChangeModal from './transactionStatusModal';
+import PartialPaymentSection from './partial-payment';
 
 export default function SellerOrderDetails() {
   const { activeMenu } = useSelector((state) => state.menu, shallowEqual);
@@ -71,6 +72,18 @@ export default function SellerOrderDetails() {
   const [isTransactionStatusModalOpen, setIsTransactionStatusModalOpen] =
     useState(null);
   const { myShop } = useSelector((state) => state.myShop, shallowEqual);
+  const handleAddPayment = async (paymentData) => {
+    try {
+      // Burada sizin API çağırınızı əlavə edin
+      const response = await orderService.addPartialPayment(paymentData);
+      // Uğurlu olduqda order məlumatlarını yeniləyin
+      fetchOrder();
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const columns = [
     {
       title: t('id'),
@@ -597,6 +610,14 @@ export default function SellerOrderDetails() {
                 />
               </div>
             </Card>
+          )}
+          {data?.is_partial_payment && (
+            <PartialPaymentSection
+              orderData={data}
+              defaultCurrency={defaultCurrency}
+              onAddPayment={handleAddPayment}
+              loading={loading}
+            />
           )}
           {data?.delivery_type !== 'dine_in' && (
             <Card title={t('documents')}>

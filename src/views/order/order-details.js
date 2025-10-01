@@ -376,7 +376,6 @@ export default function OrderDetails() {
 
   return (
     <div className='order_details'>
-
       <Card
         className='order-details-info'
         title={
@@ -559,14 +558,6 @@ export default function OrderDetails() {
                     dataSource={data?.transactions}
                     pagination={false}
                   />
-                  {data?.is_partial_payment && (
-                    <PartialPaymentSection
-                      orderData={data}
-                      defaultCurrency={defaultCurrency}
-                      onAddPayment={handleAddPayment}
-                      loading={loading}
-                    />
-                  )}
                   <Tag className='map_show mt-3' onClick={handleShowModal}>
                     <MdLocationOn /> {t('show.locations')}
                   </Tag>
@@ -639,6 +630,15 @@ export default function OrderDetails() {
               </div>
             </Card>
           )}
+          {data?.is_partial_payment && (
+            <PartialPaymentSection
+              orderData={data}
+              defaultCurrency={defaultCurrency}
+              onAddPayment={handleAddPayment}
+              loading={loading}
+            />
+          )}
+
           {/* <Card title={t('documents')}>
             <Table
               columns={documentColumns}
