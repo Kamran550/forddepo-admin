@@ -7,7 +7,8 @@ import {
   InputNumber,
   Row,
   Select,
-  Space, Switch,
+  Space,
+  Switch,
   Tag,
   TreeSelect,
 } from 'antd';
@@ -212,6 +213,22 @@ const ShopAddData = ({
                 </Form.Item>
               ))}
             </Col>
+            <Col span={6}>
+              <Form.Item
+                label={t('type')}
+                name='type'
+                rules={[{ required: true, message: t('required') }]}
+              >
+                <Select
+                  options={[
+                    { label: t('Pərakəndə'), value: 'retail' },
+                    { label: t('Topdan'), value: 'wholesale' },
+                  ]}
+                  placeholder={t('select.type')}
+                />
+              </Form.Item>
+            </Col>
+
             <Col span={12}>
               {languages.map((item, idx) => (
                 <Form.Item
@@ -269,7 +286,7 @@ const ShopAddData = ({
               <Form.Item
                 label={t('categories')}
                 name='categories'
-                rules={[{ required: true, message: t('required') }]}
+                // rules={[{ required: true, message: t('required') }]}
               >
                 <AsyncTreeSelect
                   treeCheckable
@@ -284,7 +301,10 @@ const ShopAddData = ({
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name='emailStatuses' label={t('order.statuses.for.email.notifications')}>
+              <Form.Item
+                name='emailStatuses'
+                label={t('order.statuses.for.email.notifications')}
+              >
                 <Select mode='multiple' options={emailStatusOptions} />
               </Form.Item>
             </Col>
@@ -323,18 +343,18 @@ const ShopAddData = ({
             </Col>
             <Col span={6}>
               <Form.Item
-                  label={t('order.payment')}
-                  name='order_payment'
-                  rules={[{ required: true, message: t('required') }]}
+                label={t('order.payment')}
+                name='order_payment'
+                rules={[{ required: true, message: t('required') }]}
               >
                 <Select options={orderPaymentOptions} />
               </Form.Item>
             </Col>
             <Col>
               <Form.Item
-                  name='new_order_after_payment'
-                  label={t('new.order.after.payment')}
-                  valuePropName='checked'
+                name='new_order_after_payment'
+                label={t('new.order.after.payment')}
+                valuePropName='checked'
               >
                 <Switch />
               </Form.Item>

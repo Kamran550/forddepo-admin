@@ -1671,6 +1671,13 @@ const moderatorRoutes = [
     url: 'dashboard',
     id: 'dashboard_04',
   },
+    {
+    name: 'orders',
+    icon: 'fiShoppingCart',
+    url: 'seller/orders',
+    id: 'orders',
+  },
+
   {
     name: 'pos.system',
     icon: 'laptop',
@@ -1700,12 +1707,6 @@ const moderatorRoutes = [
     icon: 'shop',
     url: 'my-shop',
     id: 'my-shop',
-  },
-  {
-    name: 'orders',
-    icon: 'fiShoppingCart',
-    url: 'seller/orders',
-    id: 'orders',
   },
   {
     name: 'discounts',

@@ -82,7 +82,7 @@ const ShopMain = ({ next }) => {
       'location[longitude]': location.lng,
       user: undefined,
       delivery_time: 0,
-      type: myShop.type === 'shop' ? 'shop' : 'restaurant',
+      type: values.type,
       tags: values.tags.map((e) => e.value),
       wifi_name: values?.wifi_name || '',
       wifi_password: values?.wifi_password || '',
