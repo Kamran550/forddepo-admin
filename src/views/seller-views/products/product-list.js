@@ -146,12 +146,25 @@ const ProductList = () => {
       is_show: true,
     },
     {
-      title: t('kitchen'),
-      dataIndex: 'kitchen',
-      key: 'kitchen',
+      title: t('stock'),
+      dataIndex: 'stock',
+      key: 'stock',
       is_show: true,
-      render: (kitchen) =>
-        kitchen?.translation?.title || kitchen?.id || t('N/A'),
+      sorter: (a, b) => {
+        // Client-side sorting for stock data
+        const aStock =
+          a.stocks?.reduce((sum, stock) => sum + (stock.quantity || 0), 0) || 0;
+        const bStock =
+          b.stocks?.reduce((sum, stock) => sum + (stock.quantity || 0), 0) || 0;
+        return aStock - bStock;
+      },
+      render: (_, row) => {
+        // Calculate total stock from stocks array
+        const totalStock =
+          row.stocks?.reduce((sum, stock) => sum + (stock.quantity || 0), 0) ||
+          0;
+        return totalStock;
+      },
     },
     {
       title: t('active'),
@@ -279,17 +292,23 @@ const ProductList = () => {
       .finally(() => setLoadingBtn(false));
   };
 
-  function onChangePagination(pagination, filter, sorter) {
-    const { pageSize: perPage, current: page } = pagination;
-    const { field: column, order } = sorter;
-    const sort = formatSortType(order);
-    dispatch(
-      setMenuData({
-        activeMenu,
-        data: { ...activeMenu.data, perPage, page, column, sort },
-      }),
-    );
+function onChangePagination(pagination, filter, sorter) {
+  const { pageSize: perPage, current: page } = pagination;
+  const { field: column, order } = sorter;
+  
+  // Stock sütunu üçün server-side sorting-i ləğv et (yalnız client-side)
+  if (column === 'stock') {
+    return;
   }
+  
+  const sort = formatSortType(order);
+  dispatch(
+    setMenuData({
+      activeMenu,
+      data: { ...activeMenu.data, perPage, page, column, sort },
+    }),
+  );
+}
 
   useDidUpdate(() => {
     dispatch(fetchSellerProducts(paramsData));
