@@ -11,11 +11,12 @@ import hideEmail from '../../components/hideEmail';
 
 export default function UserShowModal({ uuid, handleCancel }) {
   const [data, setData] = useState({});
+  const [debtData, setDebtData] = useState({});
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
   const { defaultCurrency } = useSelector(
     (state) => state.currency,
-    shallowEqual
+    shallowEqual,
   );
   const { isDemo } = useDemo();
 
@@ -27,9 +28,22 @@ export default function UserShowModal({ uuid, handleCancel }) {
       .finally(() => setLoading(false));
   }
 
+  function fetchUserDebts(userId) {
+    userService
+      .getUserDebts(userId)
+      .then((res) => setDebtData(res.data))
+      .catch((err) => console.error('Error fetching user debts:', err));
+  }
+
   useEffect(() => {
     fetchUser(uuid);
   }, [uuid]);
+
+  useEffect(() => {
+    if (data?.id) {
+      fetchUserDebts(data.id);
+    }
+  }, [data?.id]);
 
   return (
     <Modal
@@ -64,8 +78,18 @@ export default function UserShowModal({ uuid, handleCancel }) {
               <Descriptions.Item span={3} label={t('gender')}>
                 {data.gender}
               </Descriptions.Item>
-              <Descriptions.Item span={3} label={t('birthday')}>
-                {data.birthday}
+              <Descriptions.Item span={3} label={t('total.debt')}>
+                <span
+                  style={{
+                    color: debtData?.total_debt > 0 ? '#ff4d4f' : '#52c41a',
+                    fontWeight: debtData?.total_debt > 0 ? 'bold' : 'normal',
+                  }}
+                >
+                  {numberToPrice(
+                    debtData?.total_debt || 0,
+                    defaultCurrency?.symbol,
+                  )}
+                </span>
               </Descriptions.Item>
               <Descriptions.Item span={3} label={t('email')}>
                 {isDemo ? hideEmail(data?.email) : data?.email}

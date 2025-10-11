@@ -30,6 +30,7 @@ const userService = {
     request.post('dashboard/admin/delivery-man-delivery-zones', data),
   showDeliverymanZone: (id) =>
     request.get(`dashboard/admin/delivery-man-delivery-zones/${id}`),
+  getUserDebts: (userId) => request.get(`dashboard/admin/user-debts/${userId}`),
 };
 
 export default userService;

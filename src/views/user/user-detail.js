@@ -34,6 +34,7 @@ const UserDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState({});
+  const [debtData, setDebtData] = useState({});
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
@@ -66,6 +67,13 @@ const UserDetail = () => {
       .getById(uuid)
       .then((res) => setData(res.data))
       .finally(() => setLoading(false));
+  }
+
+  function fetchUserDebts(userId) {
+    userService
+      .getUserDebts(userId)
+      .then((res) => setDebtData(res.data))
+      .catch((err) => console.error('Error fetching user debts:', err));
   }
 
   const expandedRowRender = (row) => {
@@ -186,6 +194,12 @@ const UserDetail = () => {
   }, [id]);
 
   useEffect(() => {
+    if (data?.id) {
+      fetchUserDebts(data.id);
+    }
+  }, [data?.id]);
+
+  useEffect(() => {
     const params = {
       user_id: id,
       page: 1,
@@ -253,8 +267,19 @@ const UserDetail = () => {
                   {data?.active ? t('active') : t('inactive')}
                 </Tag>
               </Descriptions.Item>
-              <Descriptions.Item label={t('birthday')}>
-                {moment(data?.birthday).format('YYYY-MM-DD')}
+              <Descriptions.Item label={t('total.debt')}>
+                <span
+                  style={{
+                    color: debtData?.total_debt > 0 ? '#ff4d4f' : '#52c41a',
+                    fontWeight: debtData?.total_debt > 0 ? 'bold' : 'normal',
+                  }}
+                >
+                  {numberToPrice(
+                    debtData?.total_debt || 0,
+                    defaultCurrency?.symbol,
+                    defaultCurrency?.position,
+                  )}
+                </span>
               </Descriptions.Item>
               <Descriptions.Item label={t('email')}>
                 {isDemo ? hideEmail(data?.email) : data?.email}
