@@ -397,18 +397,18 @@ const ProductCategories = () => {
     const { pageSize: perPage, current: page } = pagination;
     const { field: column, order } = sorter;
 
-    // Skip server-side sorting for stock column (client-side only)
-    if (column === 'stock') {
-      return;
-    }
-
+    // Stock sütunu üçün client-side sorting istifadə olunur
+    // Ona görə stock sorting edilərkən server-ə column/sort göndərmirik
+    const isStockSorting = column === 'stock';
     const sort = formatSortType(order);
+    
     const params = {
       ...paramsData,
       perPage,
       page,
-      column,
-      sort,
+      // Stock sorting-də column və sort-u göndərmirik
+      column: isStockSorting ? undefined : column,
+      sort: isStockSorting ? undefined : sort,
     };
     fetch(params);
   };
