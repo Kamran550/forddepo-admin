@@ -544,6 +544,17 @@ export default function OrderDetails() {
                       )}
                     </span>
                   </div>
+                  <div>
+                    {t('oem_code')}:
+                    <span className='ml-2'>
+                      {t(
+                        !!data?.oem_code
+                          ? data?.oem_code
+                          : '',
+                      )}
+                    </span>
+                  </div>
+
 
                   <div>
                     {t('note')}:
