@@ -104,6 +104,12 @@ export default function OrderDetails() {
       ),
     },
     {
+      title: t('oem_code'),
+      dataIndex: 'oem_code',
+      key: 'oem_code',
+      render: (_, row) => row?.stock?.product?.oem_code || '-',
+    },
+    {
       title: t('image'),
       dataIndex: 'stock',
       key: 'stock',
@@ -544,14 +550,17 @@ export default function OrderDetails() {
                       )}
                     </span>
                   </div>
+                  <br />
                   <div>
                     {t('oem_code')}:
                     <span className='ml-2'>
-                      {t(
-                        !!data?.oem_code
-                          ? data?.oem_code
-                          : '',
-                      )}
+                      {[
+                        ...new Set(
+                          (data?.details ?? [])
+                            .map((item) => item?.stock?.product?.oem_code)
+                            .filter(Boolean),
+                        ),
+                      ].join(', ') || '-'}
                     </span>
                   </div>
 
