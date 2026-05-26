@@ -47,6 +47,36 @@ import UpdateOrderDetailStatus from './updateOrderDetailStatus';
 import TransactionStatusChangeModal from './transactionStatusModal';
 import PartialPaymentSection from './partial-payment';
 
+function collectOemCodesFromDetails(details = []) {
+  const codes = [];
+
+  details.forEach((detail) => {
+    const mainCode = detail?.stock?.product?.oem_code;
+    if (mainCode) codes.push(mainCode);
+
+    (detail?.addons ?? []).forEach((addon) => {
+      const addonCode = addon?.stock?.product?.oem_code;
+      if (addonCode) codes.push(addonCode);
+    });
+  });
+
+  return [...new Set(codes)];
+}
+
+function collectOemCodesFromDetailRow(row) {
+  const codes = [];
+  const mainCode = row?.stock?.product?.oem_code;
+
+  if (mainCode) codes.push(mainCode);
+
+  (row?.addons ?? []).forEach((addon) => {
+    const addonCode = addon?.stock?.product?.oem_code;
+    if (addonCode) codes.push(addonCode);
+  });
+
+  return [...new Set(codes)];
+}
+
 export default function OrderDetails() {
   const { activeMenu } = useSelector((state) => state.menu, shallowEqual);
   const { defaultCurrency } = useSelector(
@@ -105,9 +135,8 @@ export default function OrderDetails() {
     },
     {
       title: t('oem_code'),
-      dataIndex: 'oem_code',
       key: 'oem_code',
-      render: (_, row) => row?.stock?.product?.oem_code || '-',
+      render: (_, row) => collectOemCodesFromDetailRow(row).join(', ') || '-',
     },
     {
       title: t('image'),
@@ -554,16 +583,10 @@ export default function OrderDetails() {
                   <div>
                     {t('oem_code')}:
                     <span className='ml-2'>
-                      {[
-                        ...new Set(
-                          (data?.details ?? [])
-                            .map((item) => item?.stock?.product?.oem_code)
-                            .filter(Boolean),
-                        ),
-                      ].join(', ') || '-'}
+                      {collectOemCodesFromDetails(data?.details).join(', ') ||
+                        '-'}
                     </span>
                   </div>
-
 
                   <div>
                     {t('note')}:
