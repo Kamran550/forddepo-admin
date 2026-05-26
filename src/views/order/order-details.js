@@ -408,6 +408,7 @@ export default function OrderDetails() {
   }, [activeMenu.refetch]);
 
   const handleShowModal = () => setLocationsMap(id);
+  const oemCodes = collectOemCodesFromDetails(data?.details);
 
   return (
     <div className='order_details'>
@@ -579,13 +580,19 @@ export default function OrderDetails() {
                       )}
                     </span>
                   </div>
-                  <br />
-                  <div>
-                    {t('oem_code')}:
-                    <span className='ml-2'>
-                      {collectOemCodesFromDetails(data?.details).join(', ') ||
-                        '-'}
-                    </span>
+                  <div className='order-oem-codes'>
+                    <div className='order-oem-codes__label'>{t('oem_code')}:</div>
+                    {oemCodes.length > 0 ? (
+                      <Space size={[8, 8]} wrap className='order-oem-codes__list'>
+                        {oemCodes.map((code) => (
+                          <Tag key={code} className='order-oem-codes__tag'>
+                            {code}
+                          </Tag>
+                        ))}
+                      </Space>
+                    ) : (
+                      <span className='order-oem-codes__empty'>-</span>
+                    )}
                   </div>
 
                   <div>
